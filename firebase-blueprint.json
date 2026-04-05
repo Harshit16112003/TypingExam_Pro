@@ -1,0 +1,98 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user information and aggregate stats.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique identifier for the user." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "displayName": { "type": "string", "description": "The user's full name." },
+        "subscription": {
+          "type": "object",
+          "properties": {
+            "planId": { "type": "string", "description": "The ID of the subscription plan." },
+            "expiresAt": { "type": "number", "description": "Timestamp when the subscription expires." }
+          }
+        },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "totalTests": { "type": "number", "description": "Total number of tests taken." },
+            "avgWpm": { "type": "number", "description": "Average words per minute." },
+            "maxWpm": { "type": "number", "description": "Highest words per minute achieved." },
+            "avgAccuracy": { "type": "number", "description": "Average accuracy percentage." }
+          }
+        }
+      },
+      "required": ["uid", "email"]
+    },
+    "TestResult": {
+      "title": "Test Result",
+      "description": "Stores the result of a single typing test.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique result ID." },
+        "userId": { "type": "string", "description": "The ID of the user who took the test." },
+        "testId": { "type": "string", "description": "The ID of the test taken." },
+        "testTitle": { "type": "string", "description": "The title of the test." },
+        "wpm": { "type": "number", "description": "Words per minute achieved." },
+        "accuracy": { "type": "number", "description": "Accuracy percentage." },
+        "errors": { "type": "number", "description": "Number of errors made." },
+        "timestamp": { "type": "number", "description": "Timestamp when the test was completed." }
+      },
+      "required": ["userId", "testId", "wpm", "accuracy", "timestamp"]
+    },
+    "LeaderboardEntry": {
+      "title": "Leaderboard Entry",
+      "description": "Stores a user's best performance for a test or category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique entry ID." },
+        "userId": { "type": "string", "description": "The ID of the user." },
+        "displayName": { "type": "string", "description": "The user's name." },
+        "testId": { "type": "string", "description": "The ID of the test." },
+        "testTitle": { "type": "string", "description": "The title of the test." },
+        "category": { "type": "string", "description": "The category of the test." },
+        "wpm": { "type": "number", "description": "Words per minute." },
+        "accuracy": { "type": "number", "description": "Accuracy percentage." },
+        "subscriptionPlan": { "type": "string", "description": "User's subscription plan." },
+        "timestamp": { "type": "number", "description": "Timestamp when the score was achieved." }
+      },
+      "required": ["userId", "testId", "wpm", "accuracy", "timestamp"]
+    },
+    "Paragraph": {
+      "title": "Typing Paragraph",
+      "description": "A paragraph for typing practice.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique paragraph ID." },
+        "title": { "type": "string", "description": "Title of the paragraph." },
+        "content": { "type": "string", "description": "The text content to type." },
+        "difficulty": { "type": "string", "enum": ["Easy", "Medium", "Hard"], "description": "Difficulty level." },
+        "category": { "type": "string", "description": "Exam category." },
+        "duration": { "type": "number", "description": "Test duration in minutes." },
+        "isPremium": { "type": "boolean", "description": "Whether this is a premium paragraph." }
+      },
+      "required": ["title", "content", "difficulty", "category", "duration"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile documents."
+    },
+    "/results/{resultId}": {
+      "schema": "TestResult",
+      "description": "Typing test results."
+    },
+    "/leaderboards/{entryId}": {
+      "schema": "LeaderboardEntry",
+      "description": "Leaderboard entries for rankings."
+    },
+    "/paragraphs/{paragraphId}": {
+      "schema": "Paragraph",
+      "description": "Dynamic typing test paragraphs."
+    }
+  }
+}
